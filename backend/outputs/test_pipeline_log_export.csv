@@ -1,0 +1,7 @@
+pipeline_id,dataset_name,total_rows,valid_rows,invalid_rows,duplicate_rows,missing_value_rows,status,message,processed_at
+PIPE-188C6189674A,mahasiswa.csv,10,10,0,0,0,SUCCESS,Dataset valid dan berhasil dimuat,2026-06-29 22:08:18.928841
+PIPE-9A7A51948E2C,dosen.csv,6,6,0,0,0,SUCCESS,Dataset valid dan berhasil dimuat,2026-06-29 22:08:18.941583
+PIPE-1D92F2F07265,mata_kuliah.csv,7,7,0,0,0,SUCCESS,Dataset valid dan berhasil dimuat,2026-06-29 22:08:18.952492
+PIPE-4099B8E1B75E,krs.csv,20,20,0,0,0,SUCCESS,Dataset valid dan berhasil dimuat,2026-06-29 22:08:18.963739
+PIPE-4E44BB67E2F7,nilai.csv,20,20,0,0,0,SUCCESS,Dataset valid dan berhasil dimuat,2026-06-29 22:08:18.977949
+PIPE-047D1E3A733D,kehadiran.csv,20,20,0,0,0,SUCCESS,Dataset valid dan berhasil dimuat,2026-06-29 22:08:18.991252

@@ -1,0 +1,30 @@
+ISTN Connect SC-DATA API DuckDB — ONE CLICK ULTRA V3
+===============================================================
+
+Launcher utama:
+- START_ONE_CLICK.bat
+
+Fungsi:
+- Auto setup .venv
+- Auto install dependency
+- Auto init DuckDB
+- Auto seed data
+- Auto start FastAPI
+- Auto populate event_log, pipeline_log, document_chunks, audit_log
+- Auto open Database Proof, Final Validation, dan frontend
+
+Tidak memakai:
+- API key
+- layanan eksternal
+- Streamlit
+
+Backend:
+- FastAPI
+- DuckDB
+- Pandas
+
+Frontend:
+- index.html
+- app.js
+- style.css
+

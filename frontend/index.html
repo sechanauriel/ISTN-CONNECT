@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ISTN CONNECT</title>
+  <meta name="description" content="ISTN CONNECT SIAKAD, LMS, Analytics, AI, Dan Governance Dalam Satu Sistem." />
+  <meta name="theme-color" content="#06172e" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="aurora-bg" aria-hidden="true"></div>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <div class="noise-layer" aria-hidden="true"></div>
+  <canvas id="particleCanvas" aria-hidden="true"></canvas>
+
+  <section id="loginScreen" class="login-screen">
+    <div class="login-visual glass-panel">
+      <div class="orb orb-a"></div>
+      <div class="orb orb-b"></div>
+      <div class="orb orb-c"></div>
+      <header class="brand-line">
+        <div>
+          <h1>Institut Sains dan Teknologi Nasional</span></h1>
+          <p>Jl. Moh. Kahfi II, Srengseng Sawah, Kecamatan Jagakarsa, </p>
+          <p>Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12640.</p>
+          <p>(021) 788-43093 | www.istn.ac.id</p>
+        </div>
+      </header>
+      <main class="login-copy">
+      </main>
+      <div class="campus-visual" aria-hidden="true">
+      </div>
+    </div>
+
+    <form id="loginForm" class="login-card glass-panel">
+      <div class="login-badge"><img src="assets/istn-logo.jpg" alt="Logo ISTN" loading="lazy" /></div>
+      <h2><span>ISTN CONNECT</span></h2>
+      <p>SIAKAD, LMS, Analytics, AI, Dan Governance Dalam Satu Sistem.</p>
+
+      <label for="roleSelect">Peran</label>
+      <select id="roleSelect" name="roleSelect">
+        <option value="Mahasiswa">Mahasiswa</option>
+        <option value="Dosen">Dosen</option>
+        <option value="Administrator">Administrator</option>
+        <option value="Pimpinan">Pimpinan</option>
+      </select>
+
+      <label for="username">Username / NIM / NIP</label>
+      <input id="username" name="username" value="mahasiswa" autocomplete="username" />
+
+      <label for="password">Password</label>
+      <div class="password-field">
+        <input id="password" name="password" type="password" value="mhs123" autocomplete="current-password" />
+        <button type="button" data-action="toggle-password" aria-label="Lihat password">◉</button>
+      </div>
+
+      <button class="btn primary full" type="submit">Masuk</button>
+      <div class="quick-login">
+        <button type="button" data-quick-role="Mahasiswa">Mahasiswa</button>
+        <button type="button" data-quick-role="Dosen">Dosen</button>
+        <button type="button" data-quick-role="Administrator">Admin</button>
+        <button type="button" data-quick-role="Pimpinan">Pimpinan</button>
+      </div>
+    </form>
+  </section>
+
+  <section id="appShell" class="app-shell hidden">
+    <aside id="sidebar" class="sidebar">
+      <button class="side-brand" data-page="dashboard">
+        <img src="assets/istn-logo.jpg" alt="Logo ISTN" loading="lazy" />
+        <span><b>ISTN <em>CONNECT</em></b><small>V.01 BETA</small></span>
+      </button>
+      <button class="profile-mini" data-page="profile">
+        <span id="profileAvatar" class="avatar">AA</span>
+        <span><b id="sidebarName">Muhammad Sechan Auriel</b><small id="sidebarRole">Mahasiswa</small></span>
+      </button>
+      <nav id="navList" class="nav-list" aria-label="Menu utama"></nav>
+      <div class="system-pulse">
+        <div class="system-top"><b>System Pulse</b><span>Prototype offline</span></div>
+        <div class="pulse-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="storage-line"><span>Local sandbox</span><b>42.6%</b></div>
+        <div class="progress-track"><i style="width:42.6%"></i></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button id="menuToggle" class="icon-button mobile-only" aria-label="Buka menu">☰︎</button>
+        <button id="commandLauncher" class="command-launcher" type="button"><span>⌕︎</span><b>Cari fitur, mahasiswa, mata kuliah, dokumen...</b><kbd>Ctrl K</kbd></button>
+        <div class="top-actions">
+          <button class="icon-button dot" data-page="messages" title="Pesan">✉︎</button>
+          <button class="icon-button dot" data-page="calendar" title="Kalender">◷︎</button>
+          <button class="icon-button" data-page="settings" title="Pengaturan">⚙︎</button>
+          <button id="topProfile" class="profile-top" data-page="profile"><span>Muhammad Sechan Auriel</span><small>Mahasiswa</small></button>
+          <button class="icon-button danger" data-action="logout" title="Keluar">⎋︎</button>
+        </div>
+      </header>
+      <section id="content" class="content" aria-live="polite"></section>
+    </main>
+  </section>
+
+  <dialog id="commandDialog" class="command-dialog">
+    <div class="dialog-head"><div><h2>Command Center</h2><p>Akses cepat menu, data mahasiswa, mata kuliah, dan fitur sistem.</p></div><button data-action="close-command" aria-label="Tutup">×</button></div>
+    <input id="commandInput" class="command-input" placeholder="Contoh: presensi, tambah mahasiswa, pesan, kalender, AI..." />
+    <div id="commandResults" class="command-results"></div>
+  </dialog>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card glass-panel">
+      <div class="modal-head"><div><h2 id="modalTitle">Modal</h2><p id="modalDesc">Form aksi cepat.</p></div><button data-action="close-modal">×</button></div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Berhasil.</div>
+  
+  <!-- Modular JS scripts -->
+  <script src="js/utils/helpers.js"></script>
+  <script src="js/data/seeds.js"></script>
+  <script src="js/services/api.js"></script>
+  <script src="js/core/app.js"></script>
+  <script src="js/features/features.js"></script>
+</body>
+</html>

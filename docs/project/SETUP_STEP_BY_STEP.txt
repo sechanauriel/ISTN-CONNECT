@@ -1,0 +1,41 @@
+LANGKAH CEPAT MENJALANKAN POWERFUL V2
+======================================
+
+1. Extract ZIP.
+2. Buka terminal di folder project.
+3. Jalankan:
+
+   python -m pip install -r backend/requirements.txt
+   python backend/init_db.py
+   python backend/seed_data.py
+   python -m uvicorn backend.main:app --reload
+
+4. Buka browser:
+
+   http://localhost:8000/api/health
+
+5. Buka index.html.
+6. Login:
+
+   admin / admin123
+
+7. Buka menu SC-DATA Cockpit.
+8. Klik secara berurutan:
+
+   Load Event Baru
+   Run Pipeline
+   Build RAG Index
+   Database Proof
+   Final Validation
+   Backup DuckDB
+
+9. Bukti database:
+
+   http://localhost:8000/api/db/tables
+
+CATATAN:
+- Tidak memakai API key.
+- Tidak memakai layanan eksternal.
+- Tidak memakai Streamlit.
+- Backend lokal: FastAPI.
+- Database lokal: DuckDB.

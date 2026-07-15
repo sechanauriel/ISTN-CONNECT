@@ -1,0 +1,24 @@
+VALIDATION REPORT — ISTN CONNECT V16 ALL ACCOUNTS ELITE
+==========================================================
+
+VALIDASI AKUN
+- 10 akun mahasiswa tersedia. Username = NIM, password = NIM.
+- 6 akun dosen tersedia dengan username dan password personal.
+- Akun admin tersedia: admin / admin123.
+- Akun pimpinan tersedia: pimpinan / pimpinan123.
+- Profil menampilkan nama sesuai akun login.
+- Sidebar dan topbar menampilkan nama sesuai akun login.
+- Menu User & Role menampilkan semua akun mahasiswa dan dosen.
+
+VALIDASI ROLE
+- Mahasiswa: dashboard, KRS, kelas, nilai, kehadiran, tugas, dokumen, pesan, kalender, profil, pengaturan.
+- Dosen: dashboard, kelas diampu, tugas, pengumpulan, presensi, nilai, mahasiswa, pesan, kalender, profil, pengaturan.
+- Administrator: CRUD master data, user & role, pipeline, audit, governance, deployment.
+- Pimpinan: dashboard eksekutif, statistik, rekap nilai, rekap kehadiran, risiko, compliance, executive AI.
+
+VALIDASI SISTEM
+- Data mahasiswa, dosen, mata kuliah, tugas, pesan, kalender, audit, nilai, presensi tersimpan via localStorage.
+- Storage key diperbarui ke V16 agar data lama tidak menahan akun versi sebelumnya.
+- Command Center memuat mahasiswa, dosen, mata kuliah, dan menu.
+- JavaScript syntax check: PASS.
+
