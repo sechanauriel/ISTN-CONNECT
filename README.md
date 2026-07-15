@@ -20,10 +20,7 @@ Dengan satu klik (`START_ONE_CLICK.bat`), sistem akan:
 
 ## Diagram Arsitektur
 
-Diagram arsitektur sistem tersedia dalam dua format:
-
-- **File Mermaid standalone**: [`docs/architecture_diagram.mmd`](docs/architecture_diagram.mmd) — bisa dibuka di editor Mermaid atau dirender otomatis oleh GitHub/GitLab.
-- **Embedded di bawah** — langsung terlihat saat membaca README di platform yang mendukung Mermaid.
+Diagram arsitektur sistem tersedia :
 
 ### Penjelasan per Layer
 
