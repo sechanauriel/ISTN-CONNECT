@@ -1,257 +1,135 @@
 # ISTN CONNECT SC-DATA
 
-SC-DATA adalah prototipe portal akademik terpadu.
-Sistem menggabungkan UI role-based, backend FastAPI, database DuckDB, pipeline CSV, pencarian dokumen RAG, audit log, backup, dan final validation.
+> Prototipe portal akademik terpadu dengan UI role-based, backend FastAPI, database DuckDB, pipeline CSV, pencarian dokumen RAG, audit log, backup, dan final validation.
+
+---
 
 ## Ringkasan
 
-ISTN CONNECT SC-DATA dibuat sebagai demo sistem akademik lokal yang lengkap dan siap dipresentasikan.
-Proyek ini berjalan sepenuhnya tanpa ketergantungan layanan eksternal, sehingga dapat digunakan sebagai bukti konsep yang stabil di lingkungan offline.
+**ISTN CONNECT SC-DATA** adalah sistem akademik lokal yang berjalan sepenuhnya tanpa ketergantungan layanan eksternal. Sistem ini dirancang sebagai bukti konsep (POC) yang stabil untuk lingkungan offline, dengan fokus pada kualitas data, auditabilitas, dan kesiapan integrasi AI.
 
-Dengan satu klik (`START_ONE_CLICK.bat`), aplikasi akan:
-- menyiapkan virtual environment Python lokal,
-- menginstal dependency backend,
-- membuat dan memeriksa skema DuckDB,
-- menyiapkan data sample dan dokumen RAG,
-- menjalankan backend FastAPI,
-- membuka UI frontend dan halaman bukti demo.
+Dengan satu klik (`START_ONE_CLICK.bat`), sistem akan:
+- Menyiapkan virtual environment Python lokal
+- Menginstal dependency backend
+- Membuat dan memeriksa skema DuckDB
+- Menyiapkan data sample dan dokumen RAG
+- Menjalankan backend FastAPI
+- Membuka UI frontend dan halaman bukti demo
+
+---
 
 ## Tujuan Sistem
 
-SC-DATA dirancang sebagai ekosistem kampus yang datanya dapat dilacak, divalidasi, diamankan, dan siap (AI-Ready).
+SC-DATA dirancang sebagai ekosistem kampus yang datanya dapat **dilacak**, **divalidasi**, **diamankan**, dan **AI-Ready**.
+
+---
 
 ## Layanan Terpadu
 
-Mahasiswa, dosen, admin, dan pimpinan masuk ke portal yang sama, dengan menu dan aksi yang direstriksi mengikuti role masing-masing (RBAC).
+| Role | Akses Utama |
+|------|-------------|
+| **Mahasiswa** | Dashboard personal, KRS, jadwal, nilai, kehadiran, AI akademik |
+| **Dosen** | Kelas yang diampu, pengelolaan tugas, input presensi/nilai, bimbingan, AI teaching assistant |
+| **Administrator** | Master data, pipeline ETL, audit log, RBAC, governance, backup, status sistem |
+| **Pimpinan** | KPI kampus, rata-rata IPK, kehadiran, risiko akademik, compliance, insight strategis |
 
-## Knowledge Base (RAG)
+Semua peran masuk ke portal yang sama dengan menu dan aksi yang direstriksi sesuai role masing-masing (RBAC).
 
-Dokumen KRS, skripsi, cuti, dan SOP dipecah menjadi chunk data sistem AI agar dapat dicari dan dijadikan sumber referensi akurat.
-
-## Kualitas Data
-
-Data CSV tidak langsung ditampilkan. Sistem memvalidasi kolom, mencegah duplikasi, mengatasi nilai kosong, dan menstandarisasi domain nilai.
-
-## Bukti Evaluasi
-
-Setiap proses kritikal menghasilkan evidence digital secara otomatis: `pipeline_log`, `event_log`, `audit_log`, dan mekanisme final validation.
+---
 
 ## Fitur Utama
 
-- **One Click Demo**: Proses setup otomatis dengan `START_ONE_CLICK.bat`.
-- **Frontend Interaktif**: UI login role-based, dashboard personalisasi, command center, dan banyak fitur modul.
-- **Backend Lokal FastAPI**: layanan API REST dengan autentikasi, RBAC, audit, export, backup, dan validasi.
-- **Database DuckDB**: penyimpanan lokal tabel analitik dan log untuk eksekusi cepat.
-- **ETL / Data Pipeline**: impor CSV, validasi, dan pencatatan masalah data.
-- **RAG / Smart Search**: pencarian dokumen akademik berbasis chunking dan TF-IDF lokal.
-- **Audit & Governance**: pencatatan aktivitas, backup lokal, dan ekspor CSV bukti.
-- **Role-Based Access**: antarmuka dan jalur akses berbeda untuk Mahasiswa, Dosen, Administrator, dan Pimpinan.
+| Fitur | Deskripsi |
+|-------|-----------|
+| **One Click Demo** | Setup otomatis dengan `START_ONE_CLICK.bat` |
+| **Frontend Interaktif** | UI login role-based, dashboard personalisasi, command center |
+| **Backend FastAPI** | REST API lokal dengan autentikasi, RBAC, audit, export, backup, dan validasi |
+| **Database DuckDB** | Penyimpanan lokal tabel analitik dan log untuk eksekusi cepat |
+| **ETL / Data Pipeline** | Impor CSV, validasi, dan pencatatan masalah data |
+| **RAG / Smart Search** | Pencarian dokumen akademik berbasis chunking dan TF-IDF lokal |
+| **Audit & Governance** | Pencatatan aktivitas, backup lokal, dan ekspor CSV bukti |
+| **Role-Based Access** | Antarmuka dan jalur akses berbeda per role |
 
-## Backend
-
-Backend proyek dibangun dengan **FastAPI** dan menyediakan API lokal untuk semua fungsi inti.
-
-- `backend/main.py` menyediakan endpoint REST, autentikasi, RBAC, audit, dan logika bisnis.
-- `backend/db.py` mengelola koneksi DuckDB, fungsi export CSV, dan pencatatan audit.
-- `backend/init_db.py` melakukan inisialisasi skema database dan membuat tabel serta indeks.
-- `backend/seed_data.py` menyiapkan data sample CSV, event, dan dokumen RAG untuk demo.
-- `backend/sc_data.duckdb` adalah database lokal yang berisi tabel operasional dan analitik.
-
-### Endpoint Utama Backend
-- `POST /api/auth/login` — login dan terima token Base64.
-- `GET /api/auth/validate` — validasi token.
-- `GET /api/health` — cek kesehatan backend dan koneksi database.
-- `GET /api/db/tables` — daftar tabel dan jumlah baris DuckDB.
-- `GET /api/dashboard/summary` — ringkasan statistik dashboard.
-- `POST /api/events/load` — muat event kehadiran.
-- `POST /api/pipeline/run` — jalankan pipeline ETL untuk data akademik.
-- `POST /api/rag/build` — bangun indeks dokumen RAG.
-- `POST /api/rag/search` — pencarian dokumen berbasis query.
-- `GET /api/audit/log` — tampilkan audit log.
-- `POST /api/backup/create` — buat backup DuckDB.
-- `GET /api/validation/final` — validasi akhir sistem.
-
-## Pipeline Data
-
-Pipeline ETL bertanggung jawab memuat dan memvalidasi data dari CSV ke DuckDB.
-
-- Data pipeline membaca file data di `data/csv/` lalu melakukan validasi kolom dan baris.
-- Tabel target pipeline:
-  - `mahasiswa`
-  - `dosen`
-  - `mata_kuliah`
-  - `krs`
-  - `nilai`
-  - `kehadiran`
-- Setiap dataset divalidasi untuk:
-  - kolom wajib lengkap,
-  - nilai kosong atau string kosong,
-  - duplikat primary key,
-  - aturan domain khusus (`nilai` 0-100, status kehadiran valid).
-- Baris yang valid dimuat ke tabel DuckDB; baris bermasalah dicatat ke `pipeline_issue_log`.
-- Ringkasan proses tersimpan di `pipeline_log` yang mencatat total baris, valid, invalid, duplikat, dan nilai hilang.
-
-## Integrasi RAG
-
-Sistem RAG memanfaatkan dokumen akademik lokal untuk menyediakan pencarian konten berbasis sumber.
-
-- Dokumen dimuat dari folder `docs/rag/`.
-- Backend mem-parsing dan membagi dokumen ke dalam chunk teks.
-- Chunk disimpan di tabel `document_chunks` di DuckDB.
-- Pencarian `POST /api/rag/search` menggunakan query user untuk menilai relevansi dan mengembalikan jawaban berbasis dokumen.
-- Fitur ini berjalan sepenuhnya lokal tanpa ketergantungan API eksternal.
+---
 
 ## Keamanan & Governance
 
-Bagian keamanan proyek ini fokus pada kontrol akses, audit, validasi input, dan backup data:
-- **Autentikasi**: login menggunakan `POST /api/auth/login` menghasilkan token Base64 dengan format `Role:Username`.
-- **RBAC**: endpoint sensitif seperti `POST /api/events/load`, `POST /api/pipeline/run`, `POST /api/rag/build`, dan `POST /api/backup/create` memerlukan role `Administrator`.
-- **Validasi input**: semua input JSON diperiksa oleh Pydantic model untuk mencegah payload tidak valid.
-- **Audit log**: setiap aktivitas penting disimpan ke tabel `audit_log` dengan role, action, detail, status, dan metadata.
-- **Data integrity**: pipeline memeriksa duplikat, nilai kosong, nilai di luar rentang, dan status kehadiran yang tidak valid.
-- **Backup lokal**: `POST /api/backup/create` membuat salinan file DuckDB dan mencatat metadata backup ke tabel `backup_log`.
-- **Ekspor bukti**: log audit, event, dan pipeline dapat diunduh sebagai CSV dari endpoint export.
+- **Autentikasi**: Login menghasilkan token Base64 dengan format `Role:Username`
+- **RBAC**: Endpoint sensitif (pipeline, event, RAG, backup) memerlukan role `Administrator`
+- **Validasi Input**: Semua input JSON diperiksa oleh Pydantic model
+- **Audit Log**: Setiap aktivitas penting tersimpan di tabel `audit_log` dengan role, action, detail, status, dan metadata
+- **Data Integrity**: Pipeline memeriksa duplikat, nilai kosong, nilai di luar rentang, dan status kehadiran tidak valid
+- **Backup Lokal**: Backup DuckDB tersimpan di `backend/backups/` dengan metadata di tabel `backup_log`
+- **Ekspor Bukti**: Log audit, event, dan pipeline dapat diunduh sebagai CSV
 
-## Strategi Deployment
+---
 
-Strategi deployment proyek ini dirancang untuk lingkungan lokal / on-premise:
+## Tampilan UI
 
-- **One-click deployment**: gunakan `START_ONE_CLICK.bat` untuk menyiapkan lingkungan langsung.
-- **Virtual environment lokal**: `.venv` dibuat di root proyek untuk isolasi dependency.
-- **Database embedded**: DuckDB berjalan sebagai file lokal sehingga tidak memerlukan server database terpisah.
-- **Backup rutin**: backup DuckDB disimpan di `backend/backups/` untuk pemulihan cepat.
-- **Dev / testing**: jalankan backend dengan `uvicorn backend.main:app --reload` pada fase pengembangan.
-- **Production / on-premise**: jalankan backend via production ASGI server seperti `uvicorn` atau `gunicorn` dengan worker Python yang sesuai, dan pastikan folder `backend/backups/` serta `backend/outputs/` aman.
-- **Dokumentasi dan bukti**: `docs/project/README.md` dan `architecture_diagram.md` mendukung deployment dan audit.
+Berikut cuplikan antarmuka ISTN CONNECT SC-DATA untuk masing-masing peran pengguna:
 
-## Struktur Folder
+### Halaman Login
 
-- `index.html` — UI utama.
-- `frontend/` — aset frontend, CSS, JS, dan screenshot.
-- `backend/` — backend API, database utils, init, seed data, dan backup.
-- `data/` — data sumber `csv` dan `json`.
-- `docs/` — dokumentasi dan dokumen RAG.
-- `scripts/` — batch file bantu untuk menjalankan dan mengelola demo.
+Portal masuk dengan pemilihan peran (Mahasiswa, Dosen, Admin, Pimpinan) dan latar belakang kampus ISTN.
 
-## File Penting
+![Halaman Login](frontend/assets/login.png)
 
-- `backend/requirements.txt` — dependency Python backend.
-- `backend/init_db.py` — buat skema DuckDB dan indeks dasar.
-- `backend/seed_data.py` — buat data sample CSV, event, dan dokumen RAG.
-- `backend/main.py` — implementasi endpoint FastAPI.
-- `backend/db.py` — utilitas database, audit, export, dan koneksi.
-- `frontend/index.html` — halaman login dan kerangka aplikasi.
-- `frontend/js/features/features.js` — fitur UI tambahan.
-- `frontend/assets/` — screenshot dan logo proyek. Gambar ini dapat digunakan sebagai dokumentasi visual jika repositori diposting di GitHub.
-- `docs/project/README.md` — dokumentasi arsitektur dan alur.
-- `docs/images/` — gambar pendukung dokumentasi.
-- `architecture_diagram.md` — diagram arsitektur dan flow sistem.
-- `scripts/START_ONE_CLICK.bat` — launcher demo satu klik.
+---
 
-## Dokumentasi GitHub
+### Dashboard Administrator
 
-Folder dokumentasi dan aset di repositori sudah disusun agar GitHub dapat menampilkan dokumentasi visual dan teks:
-- `docs/project/` berisi dokumen HTML, markdown, dan panduan lengkap.
-- `docs/images/` berisi gambar pendukung yang dapat langsung ditampilkan di README atau wiki.
-- `frontend/assets/` berisi screenshot UI untuk bukti tampilan aplikasi.
+Control room untuk master data, user-role, pipeline ETL, audit log, governance, deployment, dan konsistensi data akademik. Menampilkan Data Quality Score, status pipeline, dan audit log real-time.
 
-### Saran Penataan GitHub
+![Dashboard Administrator](frontend/assets/dashboard_admin.png)
 
-- Gunakan `README.md` ini sebagai halaman utama repositori.
-- Tambahkan gambar screenshot dari `frontend/assets/` ke README agar pembaca langsung melihat UI.
-- Sertakan link ke `docs/project/README.md` dan `architecture_diagram.md` di bagian dokumentasi.
-- Jika ingin, aktifkan GitHub Pages dengan folder `docs/` atau `docs/project/` untuk dokumentasi terpublikasi.
+---
 
-Contoh Markdown untuk memasukkan screenshot dari `frontend/assets/`:
+### Dashboard Dosen
 
-```md
-![Login ISTN CONNECT](frontend/assets/login.png)
-![Admin Dashboard](frontend/assets/admin.png)
-![Mahasiswa Dashboard](frontend/assets/mahasiswa.png)
-```
+Workspace dosen lengkap dengan kelas yang diampu, pengelolaan tugas, input presensi/nilai, daftar bimbingan, dan AI teaching assistant. Dilengkapi Course Health Analytics dan Teaching Action Panel.
 
-> Pastikan file gambar di-commit ke repositori agar GitHub menampilkan thumbnail dengan benar.
+![Dashboard Dosen](frontend/assets/dashboard_dosen.png)
 
-## Data dan Tabel DuckDB
+---
 
-Data awal diambil dari folder `data/csv/`:
-- `mahasiswa.csv`
-- `dosen.csv`
-- `mata_kuliah.csv`
-- `krs.csv`
-- `nilai.csv`
-- `kehadiran.csv`
-- `kehadiran_event.csv`
+### Dashboard Mahasiswa
 
-## Pipeline Data & Validasi
+Satu layar compact untuk KRS, jadwal, tugas, presensi, nilai, dokumen, pesan, dan AI akademik. Menampilkan Academic Performance Live, Academic Health Engine, dan AI Priority.
 
-Pipeline ETL backend memproses data CSV berikut ini:
-- `mahasiswa.csv` → tabel `mahasiswa`
-- `dosen.csv` → tabel `dosen`
-- `mata_kuliah.csv` → tabel `mata_kuliah`
-- `krs.csv` → tabel `krs`
-- `nilai.csv` → tabel `nilai`
-- `kehadiran.csv` → tabel `kehadiran`
+![Dashboard Mahasiswa](frontend/assets/dashboard_mahasiswa.png)
 
-Aturan validasi pipeline:
-- Periksa kolom wajib sesuai spesifikasi setiap file.
-- Hapus duplikat berdasarkan primary key (`nim`, `nidn`, `kode_mk`, `krs_id`, `nilai_id`, `hadir_id`).
-- Deteksi nilai kosong atau string kosong pada kolom wajib.
-- Untuk `nilai.csv`: konversi nilai tugas/UTS/UAS ke numerik, pastikan 0-100, lalu hitung `nilai_akhir` dan `grade` otomatis.
-- Untuk `kehadiran.csv`: normalisasi `status_hadir` dan pastikan hanya `hadir`, `izin`, `sakit`, atau `alfa`.
-- Baris valid dimuat ke tabel DuckDB, sementara baris bermasalah dicatat ke `pipeline_issue_log`.
-- Ringkasan hasil pipeline disimpan di `pipeline_log` dengan jumlah total, valid, duplikat, dan nilai hilang.
+---
 
-Sumber event log khusus:
-- `kehadiran_event.csv` dimuat ke tabel `event_log` melalui endpoint event monitor.
-- Sistem mencegah duplikat `event_id` dan mencatat status kehadiran.
+### Dashboard Pimpinan Fakultas
 
-Tabel DuckDB inti:
-- `event_log`
-- `pipeline_log`
-- `pipeline_issue_log`
-- `audit_log`
-- `document_chunks`
-- `mahasiswa`
-- `dosen`
-- `mata_kuliah`
-- `krs`
-- `nilai`
-- `kehadiran`
-- `backup_log`
+Executive intelligence untuk performa kampus, risiko akademik, compliance, audit, dan keputusan strategis. Menampilkan Strategic Academic Trend, Executive Radar, dan Decision Signal.
 
-## Dokumen RAG
+![Dashboard Pimpinan Fakultas](frontend/assets/dashboard_pimpinan.png)
 
-Dokumen RAG tersedia di:
-- `docs/rag/pedoman_krs.txt`
-- `docs/rag/pedoman_skripsi.txt`
-- `docs/rag/aturan_cuti_akademik.txt`
-- `docs/rag/sop_perkuliahan.txt`
+---
 
-Sistem dapat membangun indeks dokumen dan melakukan pencarian lokal tanpa API eksternal.
+## Cara Menjalankan
 
-## Cara Menjalankan (One-Click)
+### One-Click Deployment
 
-1. Extrak proyek jika perlu.
-2. Jalankan `scripts/START_ONE_CLICK.bat` atau `START_ONE_CLICK.bat` dari root.
-3. Tunggu proses setup selesai.
-4. Buka browser ke `http://127.0.0.1:8000` untuk backend atau buka `index.html` secara langsung untuk frontend.
+1. Ekstrak proyek jika diperlukan
+2. Jalankan `START_ONE_CLICK.bat` dari root folder
+3. Tunggu proses setup selesai
+4. Buka browser ke `http://127.0.0.1:8000` (backend) atau buka `index.html` secara langsung (frontend)
 
-### Apa `START_ONE_CLICK.bat` Lakukan?
+**Apa yang dilakukan `START_ONE_CLICK.bat`?**
 
 `backend/one_click_demo.py` menjalankan otomatisasi berikut:
-- menunggu backend FastAPI aktif,
-- login sebagai Administrator untuk mendapat token,
-- memuat `kehadiran_event.csv` ke `event_log`,
-- menjalankan pipeline 6 CSV ke tabel DuckDB,
-- membangun index RAG untuk `document_chunks`,
-- membuat backup DuckDB,
-- menjalankan final validation,
-- membuka browser ke Database Proof, Final Validation, dan portal frontend.
+- Menunggu backend FastAPI aktif
+- Login sebagai Administrator untuk mendapat token
+- Memuat `kehadiran_event.csv` ke `event_log`
+- Menjalankan pipeline 6 CSV ke tabel DuckDB
+- Membangun index RAG untuk `document_chunks`
+- Membuat backup DuckDB
+- Menjalankan final validation
+- Membuka browser ke Database Proof, Final Validation, dan portal frontend
 
-## Cara Menjalankan Manual
-
-Buka PowerShell di folder proyek dan jalankan:
+### Manual Deployment
 
 ```powershell
 py -3 -m venv .venv
@@ -264,117 +142,214 @@ python -m uvicorn backend.main:app --reload
 
 Kemudian buka `index.html` di browser.
 
+### Deployment Production / On-Premise
+
+- Gunakan production ASGI server seperti `uvicorn` atau `gunicorn` dengan worker Python yang sesuai
+- Pastikan folder `backend/backups/` dan `backend/outputs/` aman
+- Aktifkan GitHub Pages dengan folder `docs/` atau `docs/project/` untuk dokumentasi terpublikasi
+
+---
+
 ## Akun Demo
 
-- Administrator: `admin / admin123`
-- Pimpinan: `pimpinan / pimpinan123`
-- Mahasiswa: username = NIM, password = NIM
-- Dosen: username/password dapat disesuaikan dalam UI demo
+| Role | Username | Password |
+|------|----------|----------|
+| Administrator | `admin` | `admin123` |
+| Pimpinan | `pimpinan` | `pimpinan123` |
+| Mahasiswa | `24360001` | `24360001` |
+| Dosen | `oni` | `oni123` |
 
-## User & Role
+> **Catatan**: Mahasiswa umumnya menggunakan NIM sebagai username dan password.
 
-Sistem mendukung empat peran utama dengan hak akses berbeda:
-- **Administrator**: akses penuh untuk menjalankan pipeline, memuat event, membangun RAG, backup, dan ekspor data.
-- **Pimpinan**: tampilan strategis, laporan ringkas, dan akses baca terhadap data analitik.
-- **Dosen**: akses fitur akademik untuk mengelola pengumuman, jadwal, dan memberikan data terkait mahasiswa.
-- **Mahasiswa**: akses ke dashboard personal, notifikasi, pengumuman, nilai, kehadiran, dan fitur akademik.
+---
 
-Hak akses penting:
-- `Administrator` wajib untuk endpoint sensitif seperti `POST /api/pipeline/run`, `POST /api/events/load`, `POST /api/rag/build`, `POST /api/backup/create`.
-- Semua peran dapat menggunakan login frontend, namun hanya role yang diotorisasi dapat melihat menu dan fungsi tertentu.
+## Struktur Folder
 
-## Login & Demo Access
+```
+├── index.html                  # UI utama
+├── frontend/                   # Aset frontend, CSS, JS, screenshot
+├── backend/                    # API, database utils, init, seed, backup
+│   ├── main.py                 # Endpoint FastAPI
+│   ├── db.py                   # Utilitas database, audit, export
+│   ├── init_db.py              # Inisialisasi skema DuckDB
+│   ├── seed_data.py            # Data sample CSV, event, dokumen RAG
+│   ├── requirements.txt        # Dependency Python
+│   └── sc_data.duckdb          # Database lokal
+├── data/                       # Data sumber CSV dan JSON
+├── docs/                       # Dokumentasi dan dokumen RAG
+│   ├── project/                # Dokumentasi arsitektur dan alur
+│   ├── images/                 # Gambar pendukung dokumentasi
+│   └── rag/                    # Dokumen RAG (KRS, skripsi, cuti, SOP)
+├── scripts/                    # Batch file bantu
+│   ├── START_ONE_CLICK.bat     # Launcher demo satu klik
+│   ├── STOP_BACKEND.bat        # Hentikan backend port 8000
+│   ├── RESET_DATABASE_AND_START.bat
+│   ├── OPEN_ALL_PROOF.bat
+│   └── CHECK_SYSTEM.bat
+└── architecture_diagram.md     # Diagram arsitektur dan flow sistem
+```
 
-Akun demo yang tersedia di frontend:
-- **Administrator**: `admin / admin123`
-- **Pimpinan**: `pimpinan / pimpinan123`
-- **Mahasiswa**: `24360001 / 24360001`
-- **Dosen**: `oni / oni123`
+---
 
-Login ini dapat langsung digunakan untuk masuk ke portal dan melihat menu serta dashboard yang sesuai dengan role.
+## Backend API
 
-## Dashboard Role-Based
+### File Utama
 
-Setiap role melihat dashboard khusus:
-- **Mahasiswa**: `Dashboard Mahasiswa` menampilkan KRS, jadwal, tugas, presensi, nilai, dokumen, pesan, dan AI akademik.
-- **Dosen**: `Dashboard Dosen` menampilkan kelas yang diampu, pengelolaan tugas, input presensi/nilai, daftar bimbingan, dan AI teaching assistant.
-- **Administrator**: `Dashboard Administrator` menampilkan master data, pipeline ETL, audit log, RBAC, governance, backup, dan status sistem.
-- **Pimpinan**: `Dashboard Pimpinan Fakultas` menampilkan KPI kampus, rata-rata IPK, kehadiran, risiko akademik, compliance, audit, dan insight strategis.
+| File | Fungsi |
+|------|--------|
+| `backend/main.py` | Endpoint REST, autentikasi, RBAC, audit, logika bisnis |
+| `backend/db.py` | Koneksi DuckDB, fungsi export CSV, pencatatan audit |
+| `backend/init_db.py` | Inisialisasi skema database, tabel, dan indeks |
+| `backend/seed_data.py` | Data sample CSV, event, dan dokumen RAG |
 
-Menu frontend akan otomatis menyesuaikan dengan role yang login.
+### Endpoint
 
-## Endpoint Backend Lengkap
+#### Autentikasi
 
-### Autentikasi
-- `POST /api/auth/login` — login dan terima token Base64.
-- `GET /api/auth/validate` — validasi token aktif.
+| Method | Endpoint | Deskripsi |
+|--------|----------|-----------|
+| `POST` | `/api/auth/login` | Login dan terima token Base64 |
+| `GET` | `/api/auth/validate` | Validasi token aktif |
 
-### Kesehatan & Proof
-- `GET /api/health` — status backend.
-- `GET /api/db/tables` — daftar tabel DuckDB dan jumlah baris.
-- `GET /api/dashboard/summary` — ringkasan status dashboard.
+#### Kesehatan & Proof
 
-### Event Monitor
-- `POST /api/events/load` — muat event kehadiran baru.
-- `GET /api/events/summary` — ringkasan status event.
-- `GET /api/events/latest` — list event terbaru.
-- `POST /api/events/reset` — reset event log.
+| Method | Endpoint | Deskripsi |
+|--------|----------|-----------|
+| `GET` | `/api/health` | Status backend |
+| `GET` | `/api/db/tables` | Daftar tabel DuckDB dan jumlah baris |
+| `GET` | `/api/dashboard/summary` | Ringkasan status dashboard |
 
-### Data Pipeline
-- `POST /api/pipeline/run` — jalankan pipeline ETL dari file CSV.
-- `GET /api/pipeline/log` — lihat log pipeline terakhir.
+#### Event Monitor
 
-### RAG Search
-- `POST /api/rag/build` — bangun index dokumen RAG.
-- `POST /api/rag/search` — cari dokumen berdasarkan query.
+| Method | Endpoint | Deskripsi | Role |
+|--------|----------|-----------|------|
+| `POST` | `/api/events/load` | Muat event kehadiran baru | Admin |
+| `GET` | `/api/events/summary` | Ringkasan status event | Semua |
+| `GET` | `/api/events/latest` | List event terbaru | Semua |
+| `POST` | `/api/events/reset` | Reset event log | Admin |
 
-### Audit & Export
-- `GET /api/audit/log` — lihat audit log.
-- `GET /api/export/event-log` — unduh event log CSV.
-- `GET /api/export/pipeline-log` — unduh pipeline log CSV.
-- `GET /api/export/audit-log` — unduh audit log CSV.
+#### Data Pipeline
 
-### Backup & Validasi
-- `POST /api/backup/create` — buat backup DuckDB.
-- `GET /api/validation/final` — jalankan validasi akhir sistem.
+| Method | Endpoint | Deskripsi | Role |
+|--------|----------|-----------|------|
+| `POST` | `/api/pipeline/run` | Jalankan pipeline ETL dari CSV | Admin |
+| `GET` | `/api/pipeline/log` | Lihat log pipeline terakhir | Semua |
 
-## Skrip dan Batch File
+#### RAG Search
 
-- `START_ONE_CLICK.bat` — auto setup dan demo.
-- `STOP_BACKEND.bat` — hentikan backend di port 8000.
-- `RESET_DATABASE_AND_START.bat` — reset database dan start ulang.
-- `OPEN_ALL_PROOF.bat` — buka semua halaman bukti di browser.
-- `CHECK_SYSTEM.bat` — cek sistem cepat.
+| Method | Endpoint | Deskripsi | Role |
+|--------|----------|-----------|------|
+| `POST` | `/api/rag/build` | Bangun index dokumen RAG | Admin |
+| `POST` | `/api/rag/search` | Cari dokumen berdasarkan query | Semua |
+
+#### Audit & Export
+
+| Method | Endpoint | Deskripsi |
+|--------|----------|-----------|
+| `GET` | `/api/audit/log` | Lihat audit log |
+| `GET` | `/api/export/event-log` | Unduh event log CSV |
+| `GET` | `/api/export/pipeline-log` | Unduh pipeline log CSV |
+| `GET` | `/api/export/audit-log` | Unduh audit log CSV |
+
+#### Backup & Validasi
+
+| Method | Endpoint | Deskripsi | Role |
+|--------|----------|-----------|------|
+| `POST` | `/api/backup/create` | Buat backup DuckDB | Admin |
+| `GET` | `/api/validation/final` | Jalankan validasi akhir sistem | Semua |
+
+---
+
+## Pipeline Data & Validasi
+
+Pipeline ETL memproses file CSV dari folder `data/csv/` ke tabel DuckDB:
+
+| Sumber CSV | Tabel Target |
+|------------|--------------|
+| `mahasiswa.csv` | `mahasiswa` |
+| `dosen.csv` | `dosen` |
+| `mata_kuliah.csv` | `mata_kuliah` |
+| `krs.csv` | `krs` |
+| `nilai.csv` | `nilai` |
+| `kehadiran.csv` | `kehadiran` |
+
+### Aturan Validasi
+
+1. **Kolom Wajib**: Periksa kelengkapan kolom sesuai spesifikasi setiap file
+2. **Duplikat**: Hapus duplikat berdasarkan primary key (`nim`, `nidn`, `kode_mk`, `krs_id`, `nilai_id`, `hadir_id`)
+3. **Nilai Kosong**: Deteksi nilai kosong atau string kosong pada kolom wajib
+4. **Nilai**: Konversi nilai tugas/UTS/UAS ke numerik, pastikan rentang 0-100, lalu hitung `nilai_akhir` dan `grade` otomatis
+5. **Kehadiran**: Normalisasi `status_hadir` (hanya `hadir`, `izin`, `sakit`, atau `alfa`)
+
+**Hasil Pipeline:**
+- Baris valid dimuat ke tabel DuckDB
+- Baris bermasalah dicatat ke `pipeline_issue_log`
+- Ringkasan proses tersimpan di `pipeline_log` (total, valid, invalid, duplikat, nilai hilang)
+
+---
+
+## Tabel DuckDB
+
+### Tabel Operasional
+
+- `mahasiswa`
+- `dosen`
+- `mata_kuliah`
+- `krs`
+- `nilai`
+- `kehadiran`
+
+### Tabel Log & Audit
+
+- `event_log`
+- `pipeline_log`
+- `pipeline_issue_log`
+- `audit_log`
+- `backup_log`
+
+### Tabel RAG
+
+- `document_chunks`
+
+---
+
+## Dokumen RAG
+
+Dokumen akademik tersedia di `docs/rag/`:
+
+- `pedoman_krs.txt`
+- `pedoman_skripsi.txt`
+- `aturan_cuti_akademik.txt`
+- `sop_perkuliahan.txt`
+
+Sistem mem-parsing dan membagi dokumen ke dalam chunk teks yang disimpan di tabel `document_chunks`. Pencarian menggunakan query user untuk menilai relevansi dan mengembalikan jawaban berbasis dokumen — sepenuhnya lokal tanpa API eksternal.
+
+---
 
 ## Alur Demo yang Direkomendasikan
 
-1. Jalankan `START_ONE_CLICK.bat`.
-2. Login sebagai `Administrator`.
-3. Buka dashboard utama dan cek sistem pulse.
-4. Periksa `Database Proof` untuk melihat status tabel.
-5. Jalankan `Event Monitor` untuk memuat dan meninjau data kehadiran.
-6. Jalankan `Data Pipeline` untuk impor dan validasi data CSV.
-7. Bangun RAG dengan `Search/RAG` dan lakukan pencarian dokumen.
-8. Periksa `Final Validation` untuk memastikan semua checklist lulus.
+1. Jalankan `START_ONE_CLICK.bat`
+2. Login sebagai **Administrator**
+3. Buka dashboard utama dan cek sistem pulse
+4. Periksa **Database Proof** untuk melihat status tabel
+5. Jalankan **Event Monitor** untuk memuat dan meninjau data kehadiran
+6. Jalankan **Data Pipeline** untuk impor dan validasi data CSV
+7. Bangun RAG dengan **Search/RAG** dan lakukan pencarian dokumen
+8. Periksa **Final Validation** untuk memastikan semua checklist lulus
 
-## Detail yang Belum Dibahas
+---
 
-Beberapa area workspace ini belum dijelaskan secara penuh dalam dokumentasi utama:
-- `backend/one_click_demo.py` dan detail otomatisasi `START_ONE_CLICK.bat`.
-- `scripts/dev-server.js`, `capture_screens.py`, dan fungsi batch helper lain.
-- Logika detail `final validation` dan status evaluasi yang dikembalikan.
-- Algoritma RAG internal, chunking dokumen, dan scoring relevansi.
-- Semua halaman dan fitur tambahan di `frontend/js/features/`.
-- Folder `docs/images/` serta konten lengkap `docs/project/`.
-- `export_ai_usage.py`, file backup, dan output CSV detail.
 
-## Catatan Tambahan
+## Catatan
 
-- Sistem dibuat untuk presentasi dan validasi internal.
-- Semua proses bisa dijalankan offline.
-- Dokumentasi tambahan tersedia di `docs/project/` dan `architecture_diagram.md`.
-- Proyek ini cocok sebagai bukti konsep untuk integrasi SIAKAD + analytics + RAG.
+- Sistem dibuat untuk presentasi dan validasi internal
+- Semua proses dapat dijalankan offline
+- Dokumentasi tambahan tersedia di `docs/project/` dan `architecture_diagram.md`
+- Proyek ini cocok sebagai bukti konsep untuk integrasi SIAKAD + analytics + RAG
+
+---
 
 ## Lisensi
 
 Tidak ada lisensi khusus yang disertakan. Gunakan untuk presentasi, demo, dan studi internal.
+# ISTN-CONNECT
